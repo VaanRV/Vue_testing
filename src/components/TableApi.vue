@@ -1,14 +1,35 @@
 <template>
   <div class="table-component">
+      <input type="text" v-model="searchText" placeholder="SearchBar" @keyup.enter="filterList" />
       <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage"  />
       <table>
           <tbody>
               <tr>
-                <th>ID <a v-on:click="OrderBy('id')">Icono</a></th>
-                <th>Nombre <a v-on:click="OrderBy('name')">Icono</a></th>
-                <th>País <a v-on:click="OrderBy('country')">Icono</a></th>
-                <th>Continente <a v-on:click="OrderBy('continent')">Icono</a></th>
-                <th>Coordinadas <a v-on:click="OrderBy('coordinates')">Icono</a></th>
+                <th>
+                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('id') : OrderByDesc('id')">
+                    ID <img alt="First page" src="../assets/order_icon.png" />
+                  </a>
+                </th>
+                <th>
+                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('name') : OrderByDesc('name')">
+                    Nombre <img alt="First page" src="../assets/order_icon.png" />
+                  </a>
+                </th>
+                <th>
+                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('country') : OrderByDesc('country')">
+                    País <img alt="First page" src="../assets/order_icon.png" />
+                  </a>
+                </th>
+                <th>
+                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('continent') : OrderByDesc('continent')">
+                    Continente <img alt="First page" src="../assets/order_icon.png" />
+                  </a>
+                </th>
+                <th>
+                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('coordinates') : OrderByDesc('coordinates')">
+                    Coordinadas <img alt="First page" src="../assets/order_icon.png" />
+                  </a>
+                </th>
               </tr>
               <tr v-for="port in portsData" :key="port.id">
                 <td> {{ port.id }} </td>
@@ -32,19 +53,34 @@ export default {
   name: 'TableApi',
   data(){
       return {
-          portsData: null,
-          ordenamiento: null,
-          arreglin: null,
+          apiData: [],
+          searchText: '',
+          portsData: [],
+          ordenamiento: [],
           page: 1,
           lastPage: 25,
-          fromPage: 1,
-          toPage: 1,
-          totalData:null
+          fromPage: 0,
+          toPage: 0,
+          totalData: null,
+          typeOrder: true
       }
   },
   mounted() {
     this.getPortsData()
-    console.log(this.ordenamiento)
+  },
+  computed: {
+    filterList() {
+      this.ordenamiento = []
+      if(this.searchText.length > 0) {
+        this.apiData.filter(post => {
+          post.name.toLowerCase().includes(this.searchText.toLowerCase()) && this.ordenamiento.push(post)
+        })
+        this.portsData = this.ordenamiento
+      }
+      else {
+        this.portsData = this.apiData
+      }
+    }
   },
   methods: {
     getPortsData() {
@@ -55,6 +91,7 @@ export default {
       axios
         .get('http://apitest.cargofive.com/api/ports?page=', { params })
           .then(response => {
+            this.apiData = response['data'].data
             this.portsData = response['data'].data
             this.last_page = response['data'].meta['last_page']
             this.fromPage = response['data'].meta['from']
@@ -69,10 +106,15 @@ export default {
       this.page = (page <= 0 || page >this.last_page ? this.page : page )
       this.getPortsData()
     },
-    OrderBy(orderName) {
-      this.ordenamiento = this.portsData.sort(((a, b) => a[orderName] > b[orderName]))
-      console.log(this.ordenamiento)
-      this.portsData = this.portsData.sort((a, b) => this.ordenamiento[a[orderName]] - this.ordenamiento[b[orderName]])
+    OrderByAsc(orderName) {
+      this.ordenamiento = this.portsData.sort(((prev, next) => prev[orderName] > next[orderName]))
+      this.portsData = this.portsData.sort((prev, next) => this.ordenamiento[prev[orderName]] - this.ordenamiento[next[orderName]])
+      this.typeOrder = false
+    },
+    OrderByDesc(orderName) {
+      this.ordenamiento = this.portsData.sort(((prev, next) => prev[orderName] < next[orderName]))
+      this.portsData = this.portsData.sort((prev, next) => this.ordenamiento[prev[orderName]] - this.ordenamiento[next[orderName]])
+      this.typeOrder = true
     }
   },
 }
@@ -92,5 +134,9 @@ export default {
   }
   .table-component {
     padding: 0 15px;
+  }
+  .table-title {
+    display: flex;
+    justify-content: center;
   }
 </style>

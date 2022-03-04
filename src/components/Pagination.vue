@@ -2,18 +2,18 @@
   <div class="pagination">
     <div> {{ fromPage }} - {{ toPage }} de {{ totalData }} </div>
     <div class="pagination-buttons">
-      <a class="pagination-previous" v-on:click="changePage( 1 )">
-        <img class="first-page" alt="First page" src="../assets/first_page.png" />
+      <a class="navigation-arrow" v-on:click="changePage( 1 )">
+        <img alt="First page" src="../assets/first_page.png" />
       </a>
-      <a class="pagination-previous" v-on:click="changePage( page - 1)">
-        <img class="first-page" alt="First page" src="../assets/left_arrow.png" />
+      <a class="navigation-arrow" v-on:click="changePage( page - 1)">
+        <img alt="First page" src="../assets/left_arrow.png" />
       </a>
       <a>{{ page }}</a>
-      <a class="pagination-next" v-on:click="changePage( page + 1)">
-        <img class="first-page" alt="First page" src="../assets/right_arrow.png" />
+      <a class="navigation-arrow" v-on:click="changePage( page + 1)">
+        <img alt="First page" src="../assets/right_arrow.png" />
       </a>
-      <a class="pagination-next" v-on:click="changePage( lastPage )">
-        <img class="first-page" alt="First page" src="../assets/last_page.png" />
+      <a class="navigation-arrow" v-on:click="changePage( lastPage )">
+        <img alt="First page" src="../assets/last_page.png" />
       </a>
     </div>
   </div>
@@ -41,9 +41,7 @@
     margin-left: 10px;
     width: 150px;
   }
-  .first-page {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 20px;
+  .navigation-arrow {
+    cursor: pointer;
   }
 </style>
