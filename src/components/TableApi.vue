@@ -1,46 +1,46 @@
 <template>
   <div class="table-component">
-      <input type="text" v-model="searchText" placeholder="SearchBar" @keyup.enter="filterList" />
-      <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage"  />
-      <table>
-          <tbody>
-              <tr>
-                <th>
-                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('id') : OrderByDesc('id')">
-                    ID <img alt="First page" src="../assets/order_icon.png" />
-                  </a>
-                </th>
-                <th>
-                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('name') : OrderByDesc('name')">
-                    Nombre <img alt="First page" src="../assets/order_icon.png" />
-                  </a>
-                </th>
-                <th>
-                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('country') : OrderByDesc('country')">
-                    País <img alt="First page" src="../assets/order_icon.png" />
-                  </a>
-                </th>
-                <th>
-                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('continent') : OrderByDesc('continent')">
-                    Continente <img alt="First page" src="../assets/order_icon.png" />
-                  </a>
-                </th>
-                <th>
-                  <a class="table-title" v-on:click="typeOrder ? OrderByAsc('coordinates') : OrderByDesc('coordinates')">
-                    Coordinadas <img alt="First page" src="../assets/order_icon.png" />
-                  </a>
-                </th>
-              </tr>
-              <tr v-for="port in portsData" :key="port.id">
-                <td> {{ port.id }} </td>
-                <td> {{ port.name }} </td>
-                <td> {{ port.country }} </td>
-                <td> {{ port.continent }} </td>
-                <td> {{ port.coordinates }} </td>
-              </tr>
-          </tbody>
-      </table>
-      <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage" />
+    <input type="text" class="search-bar" v-model="searchText" placeholder="Busqueda por nombre" @keyup.enter="filterList" />
+    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage"  />
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            <a class="table-title" v-on:click="typeOrder ? OrderByAsc('id') : OrderByDesc('id')">
+              ID <img alt="First page" src="../assets/order_icon.png" />
+            </a>
+          </th>
+          <th>
+            <a class="table-title" v-on:click="typeOrder ? OrderByAsc('name') : OrderByDesc('name')">
+              Nombre <img alt="First page" src="../assets/order_icon.png" />
+            </a>
+          </th>
+          <th>
+            <a class="table-title" v-on:click="typeOrder ? OrderByAsc('country') : OrderByDesc('country')">
+              País <img alt="First page" src="../assets/order_icon.png" />
+            </a>
+          </th>
+          <th>
+            <a class="table-title" v-on:click="typeOrder ? OrderByAsc('continent') : OrderByDesc('continent')">
+              Continente <img alt="First page" src="../assets/order_icon.png" />
+            </a>
+          </th>
+          <th>
+            <a class="table-title" v-on:click="typeOrder ? OrderByAsc('coordinates') : OrderByDesc('coordinates')">
+              Coordinadas <img alt="First page" src="../assets/order_icon.png" />
+            </a>
+          </th>
+        </tr>
+        <tr v-for="port in portsData" :key="port.id">
+          <td> {{ port.id }} </td>
+          <td> {{ port.name }} </td>
+          <td> {{ port.country }} </td>
+          <td> {{ port.continent }} </td>
+          <td> {{ port.coordinates }} </td>
+        </tr>
+      </tbody>
+    </table>
+    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage" />
   </div>
 </template>
 
@@ -56,7 +56,7 @@ export default {
           apiData: [],
           searchText: '',
           portsData: [],
-          ordenamiento: [],
+          orderArray: [],
           page: 1,
           lastPage: 25,
           fromPage: 0,
@@ -70,12 +70,12 @@ export default {
   },
   computed: {
     filterList() {
-      this.ordenamiento = []
+      this.orderArray = []
       if(this.searchText.length > 0) {
-        this.apiData.filter(post => {
-          post.name.toLowerCase().includes(this.searchText.toLowerCase()) && this.ordenamiento.push(post)
+        this.apiData.filter(port => {
+          port.name.toLowerCase().includes(this.searchText.toLowerCase()) && this.orderArray.push(port)
         })
-        this.portsData = this.ordenamiento
+        this.portsData = this.orderArray
       }
       else {
         this.portsData = this.apiData
@@ -107,13 +107,13 @@ export default {
       this.getPortsData()
     },
     OrderByAsc(orderName) {
-      this.ordenamiento = this.portsData.sort(((prev, next) => prev[orderName] > next[orderName]))
-      this.portsData = this.portsData.sort((prev, next) => this.ordenamiento[prev[orderName]] - this.ordenamiento[next[orderName]])
+      this.orderArray = this.portsData.sort(((prev, next) => prev[orderName] > next[orderName]))
+      this.portsData = this.portsData.sort((prev, next) => this.orderArray[prev[orderName]] - this.orderArray[next[orderName]])
       this.typeOrder = false
     },
     OrderByDesc(orderName) {
-      this.ordenamiento = this.portsData.sort(((prev, next) => prev[orderName] < next[orderName]))
-      this.portsData = this.portsData.sort((prev, next) => this.ordenamiento[prev[orderName]] - this.ordenamiento[next[orderName]])
+      this.orderArray = this.portsData.sort(((prev, next) => prev[orderName] < next[orderName]))
+      this.portsData = this.portsData.sort((prev, next) => this.orderArray[prev[orderName]] - this.orderArray[next[orderName]])
       this.typeOrder = true
     }
   },
@@ -138,5 +138,21 @@ export default {
   .table-title {
     display: flex;
     justify-content: center;
+  }
+  .search-bar {
+    width: 720px;
+    height: 45px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 20px;
+    background: #f1f3f4;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    outline: none;
+  }
+  .search-bar:focus {
+    background: white;
+    box-shadow: 1px 1px 1px 1px rgba(134,141,155,0.2);
   }
 </style>
