@@ -1,6 +1,6 @@
 <template>
   <div class="pagination">
-    <div> {{ fromPage }} - {{ toPage }} de {{ totalData }} </div>
+    <div> {{ fromPage }} - {{ toPage }} de {{ totalResults }} </div>
     <div class="pagination-buttons">
       <a class="navigation-arrow" v-on:click="changePage( 1 )">
         <img alt="First page" src="../assets/first_page.png" />
@@ -22,7 +22,7 @@
 <script>
   export default {
     name: 'Pagination',
-    props: [ 'page', 'changePage', 'fromPage', 'toPage', 'totalData', 'lastPage' ]
+    props: [ 'page', 'changePage', 'fromPage', 'toPage', 'totalResults', 'lastPage' ]
   }
 </script>
 

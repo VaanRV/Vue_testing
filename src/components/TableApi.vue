@@ -1,7 +1,25 @@
 <template>
   <div class="table-component">
-    <input type="text" class="search-bar" v-model="searchText" placeholder="Busqueda por nombre" @keyup.enter="filterList" />
-    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage"  />
+    <div class="search-section">
+      <div class="search-bar-section">
+        <input type="text" class="search-bar" v-model="searchText" placeholder="Buscador" @keyup.enter="filterList(typeSearch)" />
+        <img class="search-image" alt="First page" src="../assets/search.png" width="25" height="25" v-on:click="filterList(typeSearch)" />
+      </div>
+      <div>
+        <div class="radio-select title-search">Tipo de busqueda</div>
+        <input type="radio" id="ids" value="id" v-model="typeSearch" class="radio-select">
+        <label for="ids">id</label>
+        <input type="radio" id="nombre" value="name" v-model="typeSearch" class="radio-select">
+        <label for="nombre">Nombre</label>
+        <input type="radio" id="pais" value="country" v-model="typeSearch" class="radio-select">
+        <label for="pais">País</label>
+        <input type="radio" id="continente" value="continent" v-model="typeSearch" class="radio-select">
+        <label for="continente">Continente</label>
+        <input type="radio" id="coordinadas" value="coordinates" v-model="typeSearch" class="radio-select">
+        <label for="coordinadas">Coordinadas</label>
+      </div>
+    </div>
+    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalResults="totalResults" :lastPage="lastPage"  />
     <table>
       <tbody>
         <tr>
@@ -40,7 +58,7 @@
         </tr>
       </tbody>
     </table>
-    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalData="totalData" :lastPage="lastPage" />
+    <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalResults="totalResults" :lastPage="lastPage" />
   </div>
 </template>
 
@@ -57,30 +75,18 @@ export default {
           searchText: '',
           portsData: [],
           orderArray: [],
+          typeSearch: 'name',
           page: 1,
           lastPage: 25,
           fromPage: 0,
           toPage: 0,
           totalData: null,
+          totalResults: null,
           typeOrder: true
       }
   },
   mounted() {
     this.getPortsData()
-  },
-  computed: {
-    filterList() {
-      this.orderArray = []
-      if(this.searchText.length > 0) {
-        this.apiData.filter(port => {
-          port.name.toLowerCase().includes(this.searchText.toLowerCase()) && this.orderArray.push(port)
-        })
-        this.portsData = this.orderArray
-      }
-      else {
-        this.portsData = this.apiData
-      }
-    }
   },
   methods: {
     getPortsData() {
@@ -97,6 +103,7 @@ export default {
             this.fromPage = response['data'].meta['from']
             this.toPage = response['data'].meta['to']
             this.totalData = response['data'].meta['total']
+            this.totalResults = response['data'].meta['total']
           })
           .catch(error => {
             console.log(error)
@@ -115,6 +122,33 @@ export default {
       this.orderArray = this.portsData.sort(((prev, next) => prev[orderName] < next[orderName]))
       this.portsData = this.portsData.sort((prev, next) => this.orderArray[prev[orderName]] - this.orderArray[next[orderName]])
       this.typeOrder = true
+    },
+    filterList(searchTerm) {
+      console.log(searchTerm)
+      this.orderArray = []
+      if(this.searchText.length > 0) {
+        if(searchTerm !== 'id' && searchTerm !== 'coordinates') {
+          this.apiData.filter(port => {
+            port[searchTerm].toLowerCase().includes(this.searchText.toLowerCase()) && this.orderArray.push(port)
+          })
+        }
+        else {
+          this.apiData.filter(port => {
+            if(port[searchTerm] !== null) {
+              port[searchTerm].toString().includes(this.searchText) && this.orderArray.push(port)
+            }
+          })
+        }
+        this.portsData = this.orderArray
+        this.totalResults = this.toPage = this.portsData.length
+        this.fromPage = this.portsData.length > 0 ? 1 : 0
+      }
+      else {
+        this.portsData = this.apiData
+        this.totalResults = this.totalData
+        this.toPage = this.portsData.length
+        this.fromPage = 1
+      }
     }
   },
 }
@@ -139,20 +173,45 @@ export default {
     display: flex;
     justify-content: center;
   }
-  .search-bar {
+  .search-section {
+    display: flex;
+    align-items: center;
+  }
+  .search-bar-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 720px;
     height: 45px;
     margin: 10px 0;
-    display: flex;
-    justify-content: flex-start;
-    padding: 0 20px;
     background: #f1f3f4;
     border: 1px solid transparent;
     border-radius: 8px;
+    position: relative;
+  }
+  .search-bar {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding-left: 10px;
+    height: 45px;
     outline: none;
   }
   .search-bar:focus {
     background: white;
     box-shadow: 1px 1px 1px 1px rgba(134,141,155,0.2);
+    border-radius: 8px;
+  }
+  .search-image {
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    cursor: pointer;
+  }
+  .radio-select {
+    margin-left: 10px;
+  }
+  .title-search{
+    text-align: left;
   }
 </style>

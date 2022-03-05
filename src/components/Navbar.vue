@@ -8,7 +8,8 @@
 
 <style scoped>
   .navbar {
-      background-color: rgb(191, 193, 193);
+      background-color: #f5f5f9;
+      box-shadow: 0px 5px 5px -4px rgba(0,0,0,.2);
       height: 100px;
       display: flex;
       align-items: center;
