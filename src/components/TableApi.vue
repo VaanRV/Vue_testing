@@ -4,19 +4,7 @@
       <div class="search-bar-section">
         <input type="text" class="search-bar" v-model="searchText" placeholder="Buscador" @keyup.enter="filterList(typeSearch)" />
         <img class="search-image" alt="First page" src="../assets/search.png" width="25" height="25" v-on:click="filterList(typeSearch)" />
-      </div>
-      <div>
-        <div class="radio-select title-search">Tipo de busqueda</div>
-        <input type="radio" id="ids" value="id" v-model="typeSearch" class="radio-select">
-        <label for="ids">id</label>
-        <input type="radio" id="nombre" value="name" v-model="typeSearch" class="radio-select">
-        <label for="nombre">Nombre</label>
-        <input type="radio" id="pais" value="country" v-model="typeSearch" class="radio-select">
-        <label for="pais">País</label>
-        <input type="radio" id="continente" value="continent" v-model="typeSearch" class="radio-select">
-        <label for="continente">Continente</label>
-        <input type="radio" id="coordinadas" value="coordinates" v-model="typeSearch" class="radio-select">
-        <label for="coordinadas">Coordinadas</label>
+        <SelectOptions :typeSearch="typeSearch" @returnType="recibeType" />
       </div>
     </div>
     <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalResults="totalResults" :lastPage="lastPage"  />
@@ -65,9 +53,10 @@
 <script>
 import axios from 'axios';
 import Pagination from './Pagination.vue';
+import SelectOptions from './SelectOptions.vue';
 
 export default {
-  components: { Pagination },
+  components: { Pagination, SelectOptions },
   name: 'TableApi',
   data(){
       return {
@@ -82,7 +71,7 @@ export default {
           toPage: 0,
           totalData: null,
           totalResults: null,
-          typeOrder: true
+          typeOrder: true,
       }
   },
   mounted() {
@@ -149,6 +138,9 @@ export default {
         this.toPage = this.portsData.length
         this.fromPage = 1
       }
+    },
+    recibeType(value){
+      this.typeSearch = value
     }
   },
 }
@@ -193,7 +185,7 @@ export default {
     width: 100%;
     background: transparent;
     border: none;
-    padding-left: 10px;
+    padding-left: 40px;
     height: 45px;
     outline: none;
   }
@@ -204,14 +196,18 @@ export default {
   }
   .search-image {
     position: absolute;
-    right: 0;
-    padding-right: 10px;
+    left: 0;
+    padding-left: 10px;
     cursor: pointer;
   }
-  .radio-select {
-    margin-left: 10px;
-  }
-  .title-search{
-    text-align: left;
+  .select-option {
+    position: absolute;
+    right: 0;
+    background: transparent;
+    border: unset;
+    border-left: 1px solid black;
+    height: 75%;
+    margin-right: 5px;
+    padding-left: 10px;
   }
 </style>
