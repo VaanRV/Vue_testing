@@ -1,7 +1,7 @@
 <template>
   <div class="table-component">
     <div class="search-section">
-      <SelectOptions :apiData="apiData" :portsData="portsData" :totalResults="totalResults" :toPage="toPage" :fromPage="fromPage" :totalData="totalData" @searchRecieve="searchPort" />
+      <SearchBar :apiData="apiData" :portsData="portsData" :totalResults="totalResults" :toPage="toPage" :fromPage="fromPage" :totalData="totalData" @searchRecieve="searchPort" />
     </div>
     <Pagination :page="page" :changePage="changePage" :fromPage="fromPage" :toPage="toPage" :totalResults="totalResults" :lastPage="lastPage"  />
     <table>
@@ -49,11 +49,11 @@
 <script>
 import axios from 'axios';
 import Pagination from './Pagination.vue';
-import SelectOptions from './SelectOptions.vue';
+import SearchBar from './SearchBar.vue';
 
 export default {
-  components: { Pagination, SelectOptions },
-  name: 'TableApi',
+  components: { Pagination, SearchBar },
+  name: 'TableData',
   data(){
       return {
           apiData: [],

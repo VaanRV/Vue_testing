@@ -1,19 +1,19 @@
 <template>
   <div>
     <Navbar />
-    <TableApi />
+    <TableData />
   </div>
 </template>
 
 <script>
-import TableApi from './components/TableApi.vue';
+import TableData from './components/TableData.vue';
 import Navbar from './components/Navbar.vue';
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    TableApi
+    TableData
   }
 }
 </script>

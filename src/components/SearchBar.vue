@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'SelectOptions',
+  name: 'SearchBar',
   props: [ 'apiData', 'portsData', 'totalResults', 'toPage', 'fromPage', 'totalData' ],
   updated(){
     this.apiDataMutate = this.apiData
