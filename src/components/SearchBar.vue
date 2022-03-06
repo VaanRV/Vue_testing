@@ -1,9 +1,10 @@
 <template>
+  <!-- Barra de busqueda  -->
   <div class="search-bar-section">
     <input type="text" class="search-bar" v-model="searchText" placeholder="Buscador" @keyup.enter="filterList()" />
     <img class="search-image" alt="First page" src="../assets/search.png" width="25" height="25" v-on:click="filterList()" />
     <select class="select-option" v-model="typeSearch">
-      <option disabled value="">Selecciona la busqueda</option>
+      <option disabled value="">Selecciona la busqueda</option> <!-- Tipo de campo para la busqueda -->
       <option v-for="option in options" :value="option.value" :key="option.value">
         {{ option.text }}
       </option>
@@ -15,7 +16,7 @@
 export default {
   name: 'SearchBar',
   props: [ 'apiData', 'portsData', 'totalResults', 'toPage', 'fromPage', 'totalData' ],
-  updated(){
+  updated() { //Asignamiento de los datos para ser manejados dentro del componente
     this.apiDataMutate = this.apiData
     this.portsDataMutate = this.portsData
     this.toPageMutate = this.toPage
@@ -23,18 +24,19 @@ export default {
     this.totalResultsMutate = this.totalResult
     this.totalDataMutate = this.totalData
   },
-  data(){
+  data() {
       return {
           searchText: '',
           typeSearch: 'name',
-          orderArray: [],
+          orderData: [],
           apiDataMutate : [],
           portsDataMutate: [],
           toPageMutate: null,
           fromPageMutate: null,
           totalResultsMutate: null,
           totalDataMutate: null,
-          options: [
+          emptySearch: true,
+          options: [ //Opciones para el tipo de busqueda
             { text: 'Id', value: 'id' },
             { text: 'Nombre', value: 'name' },
             { text: 'País', value: 'country' },
@@ -44,32 +46,34 @@ export default {
       }
   },
   methods: {
-    filterList() {
-      this.orderArray = []
+    filterList() { //Filtrado de los datos de acuerdo al texto y el tipo de busqueda
+      this.orderData = []
       if(this.searchText.length > 0) {
         if(this.typeSearch !== 'id' && this.typeSearch !== 'coordinates') {
           this.apiDataMutate.filter(port => {
-            port[this.typeSearch].toLowerCase().includes(this.searchText.toLowerCase()) && this.orderArray.push(port)
+            port[this.typeSearch].toLowerCase().includes(this.searchText.toLowerCase()) && this.orderData.push(port)
           })
         }
         else {
           this.apiDataMutate.filter(port => {
             if(port[this.typeSearch] !== null) {
-              port[this.typeSearch].toString().includes(this.searchText) && this.orderArray.push(port)
+              port[this.typeSearch].toString().includes(this.searchText) && this.orderData.push(port)
             }
           })
         }
-        this.portsDataMutate = this.orderArray
+        //Asignación de la data filtrada y la cantidad de resultados actuales
+        this.portsDataMutate = this.orderData
         this.totalResultsMutate = this.toPageMutate = this.portsDataMutate.length
         this.fromPageMutate = this.portsDataMutate.length > 0 ? 1 : 0
+        this.emptySearch = false
       }
       else {
+        //Asignación de la data filtrada sin busqueda
         this.portsDataMutate = this.apiDataMutate
-        this.totalResultsMutate = this.totalDataMutate
-        this.toPageMutate = this.portsDataMutate.length
-        this.fromPageMutate = 1
+        this.emptySearch = true
       }
-      this.$emit('searchRecieve', this.portsDataMutate, this.toPageMutate, this.fromPageMutate, this.totalResultsMutate)
+      //Enviar la nueva data filtrada por busqueda al componente TableData
+      this.$emit('searchRecieve', this.portsDataMutate, this.toPageMutate, this.fromPageMutate, this.totalResultsMutate, this.emptySearch)
     },
   },
 }

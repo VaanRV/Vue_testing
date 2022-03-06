@@ -1,4 +1,5 @@
 <template>
+  <!-- Navbar -->
   <div class="navbar">
     <div class="image-container">
       <img alt="CargoFive Logo" src="https://cargofive.com/wp-content/uploads/2018/07/logo.svg" width="150" height="70">
