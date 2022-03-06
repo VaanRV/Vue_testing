@@ -1,18 +1,25 @@
 <template>
+  <!-- Paginación -->
   <div class="pagination">
-    <div> {{ fromPage }} - {{ toPage }} de {{ totalResults }} </div> <!-- Total de resultados en la página -->
+    <!-- Total de resultados en la página -->
+    <div> {{ fromPage }} - {{ toPage }} de {{ totalResults }} </div>
     <div class="pagination-buttons">
-      <a v-bind:class="page === 1 ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( 1 )"> <!-- Navegación rapida a la primera página  -->
+      <!-- Navegación rapida a la primera página -->
+      <a v-bind:class="page === 1 ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( 1 )">
         <img alt="First page" src="../assets/first_page.png" />
       </a>
-      <a v-bind:class="page === 1 ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( page - 1)"> <!-- Navegación a la página anterior  -->
+      <!-- Navegación a la página anterior -->
+      <a v-bind:class="page === 1 ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( page - 1)">
         <img alt="previous page" src="../assets/left_arrow.png" />
       </a>
+      <!-- Página actual-->
       <a> {{ page }} </a>
-      <a  v-bind:class="page === lastPage ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( page + 1)"> <!-- Navegación a la siguiente página  -->
+      <!-- Navegación a la siguiente página -->
+      <a  v-bind:class="page === lastPage ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( page + 1)">
         <img alt="Next page" src="../assets/right_arrow.png" />
       </a>
-      <a v-bind:class="page === lastPage ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( lastPage )"> <!-- Navegación rapida a la ultima página  -->
+      <!-- Navegación rapida a la ultima página -->
+      <a v-bind:class="page === lastPage ? 'navigation-arrow disabled-page' : 'navigation-arrow'" v-on:click="changePage( lastPage )">
         <img alt="Last page" src="../assets/last_page.png" />
       </a>
     </div>
@@ -43,7 +50,6 @@
   .disabled-page {
     filter: invert(45%) sepia(20%) saturate(16%) hue-rotate(319deg) brightness(96%) contrast(83%) !important;
     pointer-events: none;
-
   }
   .navigation-arrow {
     cursor: pointer;

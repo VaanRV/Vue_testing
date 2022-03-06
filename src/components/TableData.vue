@@ -1,7 +1,8 @@
 <template>
   <!-- Tabla de datos -->
   <div class="table-component">
-    <div class="search-section"> <!-- Barra de busqueda para el filtrado de datos-->
+    <!-- Barra de busqueda para el filtrado de datos-->
+    <div class="search-section">
       <SearchBar :apiData="apiData" :portsData="portsData" :totalResults="totalResults" :toPage="toPage" :fromPage="fromPage" :totalData="totalData" @searchRecieve="searchPort" />
     </div>
     <!-- Paginación de la tabla -->
@@ -62,13 +63,13 @@ export default {
   name: 'TableData',
   data(){
       return {
-          apiData: [], //Data de todos los puertos
+          apiData: [], //Data entregada por la API
           portsData: [], //Data filtrada u ordenada de los puertos
           orderData: [],  //Arreglo temporal data ordenada
           page: 1, //Página actual
           lastPage: 1, //Última página
-          fromPage: 0, //
-          toPage: 0,
+          fromPage: 0, //Rango inicial de datos
+          toPage: 0, //Rango final de datos
           totalData: null, //Cantidad de datos entregada por la API
           totalResults: null, //Cantidad de datos filtrada
           typeOrder: true, //Estado para el tipo de ordenamiento
@@ -124,8 +125,7 @@ export default {
         this.totalResults = totalResults
         this.toPage = toPage
         this.fromPage = fromPage
-        this.page = 1
-        this.lastPage = 1
+        this.page = this.lastPage = 1
       }
       this.portsData = portsData
     }

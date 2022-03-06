@@ -3,8 +3,9 @@
   <div class="search-bar-section">
     <input type="text" class="search-bar" v-model="searchText" placeholder="Buscador" @keyup.enter="filterList()" />
     <img class="search-image" alt="First page" src="../assets/search.png" width="25" height="25" v-on:click="filterList()" />
+    <!-- Tipo de campo para la busqueda -->
     <select class="select-option" v-model="typeSearch">
-      <option disabled value="">Selecciona la busqueda</option> <!-- Tipo de campo para la busqueda -->
+      <option disabled value="">Selecciona la busqueda</option>
       <option v-for="option in options" :value="option.value" :key="option.value">
         {{ option.text }}
       </option>
